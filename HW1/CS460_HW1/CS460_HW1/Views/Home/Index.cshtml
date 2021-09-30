@@ -1,0 +1,135 @@
+﻿@model List<double>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="~/js/site.js"></script>
+<script>
+
+</script>
+@{
+    List<string> frontgears = new List<string>();
+    List<string> reargears = new List<string>();
+}
+<!DOCTYPE html>
+<div class="container-fluid" style="padding-bottom:15px;">
+    <h1 class="display-4" style="text-align: center;">Bike Gearing Calculator</h1>
+    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Index">
+        <div class="row" style="padding-bottom: 1%;">
+            <div class="col">
+                <p style="padding-left: 35%;">Wheel Circumference (in mm)</p>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="EX: 2111.5" id="Circumference" name="Circumference" style="width: 50%;">
+
+            </div>
+        </div>
+
+        <div class="row" style="padding-bottom: 1%;">
+            <div class="col">
+                <p style="padding-left: 35%;">Front chainring sizes</p>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="EX: 30,46" id="Front" name="Front" style="width: 50%;">
+            </div>
+        </div>
+
+        <div class="row" style="padding-bottom: 1%;">
+            <div class="col">
+                <p style="padding-left: 35%;">Rear cog sizes</p>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="EX: 11,13,15,17,19,21,23,25,27" id="Rear" name="Rear" style="width: 50%;">
+            </div>
+        </div>
+
+        <div class="row" style="padding-bottom: 1%;">
+            <div class="col">
+                <p style="padding-left: 35%;">Pedaling cadence (RPM)</p>
+            </div>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="EX: 90" id="RPM" name="RPM" style="width: 50%;">
+            </div>
+        </div>
+
+        <div class="form-check" style="padding-left: 20%;">
+            <input class="form-check-input" type="radio" name="Speed" id="MPH" value="MPH">
+            <label class="form-check-label" for="MPH">
+                MPH
+            </label>
+        </div>
+        <div class="form-check" style="padding-left: 20%;">
+            <input class="form-check-input" type="radio" name="Speed" id="KPH" value="KPH">
+            <label class="form-check-label" for="KPH">
+                KPH
+            </label>
+        </div>
+
+
+
+        <div class="col-12" style="padding-left:45%;">
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+
+
+@if (Model != null)
+{
+    <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        <p>Desired Speed: <span id="value"></span></p>
+    </div>
+    @foreach (var f in ViewData["fronts"] as IEnumerable<string>)
+    {
+        frontgears.Add(f);
+    }
+    @foreach (var r in ViewData["rears"] as IEnumerable<string>)
+    {
+        reargears.Add(r);
+    }
+
+    
+    int count = 0;
+    int marker = 0;
+    
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Cogs</th>
+                @for (int i = 0; i < frontgears.Count; ++i)
+                {
+                    <td>@frontgears[i]</td>
+                }
+                <th scope="col">Cogs</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (int j = 0; j < reargears.Count; ++j)
+            {
+                <tr>
+                    <td>@reargears[j]</td>
+                    @for (int k = 0; k < frontgears.Count; ++k)
+                    {
+                        @if (k + count < Model.Count)
+                        {
+                            <td id="@(Model[k + count])">@Math.Round(Model[k + count], 2)</td>
+                        }
+                    }
+                    @{
+                        count += frontgears.Count;
+                    }
+                    <td>@reargears[j]</td>
+
+                </tr>
+            }
+
+
+
+
+        </tbody>
+    </table>
+
+}
